@@ -14,7 +14,7 @@ If not, Download the ImageNet dataset from http://www.image-net.org/
     
 ## CNNs Architecture
 **AlexNet16**  
-Since the number of categories is 16, I change the number of final units of AlexNet from 1000 to 16.
+Since the number of class is 16, I change the number of final units of AlexNet from 1000 to 16.
 See more in `notebook/model.ipynb`
 
 ## run examples
