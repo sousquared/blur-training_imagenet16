@@ -9,7 +9,7 @@ $ pip install -r requirements.txt
 Or pull and run [docker image][docker-blur-training] (e.g. blur-training:latest) which I made for these experiments.  
 - Get ImageNet images & set path. If you already have ImageNet, set the `in_path` variable in `training/utils.py`.  
 If not, Download the ImageNet dataset from http://www.image-net.org/  
-    (Note that the ImageNet images need to be put in two subdirectories, ``train/`` and ``val/``.)  
+    (Note that the ImageNet images need to be divided in two subdirectories, ``train/`` and ``val/``.)  
     Then set the path.
     
 ## CNNs Architecture
