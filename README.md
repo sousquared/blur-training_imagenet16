@@ -15,7 +15,8 @@ If not, Download the ImageNet dataset from http://www.image-net.org/
 ## CNNs Architecture
 **AlexNet16**  
 Since the number of class is 16, I change the number of final units of AlexNet from 1000 to 16.
-See more in `notebook/model.ipynb`
+See more in `notebook/models.ipynb`  
+You can also use another architecture by using `--arch [ARCHITECTURE NAME]`. See `python main.py -h` for the available models (from pytorchvision's model zoo).
 
 ## run examples
 General usage example:
@@ -27,7 +28,7 @@ $ python main.py --mode [TRAINING MODE] -n [EXPERIMENT NAME] [IMAGENET_PATH]
 For `main.py`, you need to use `--exp-name` or `-n` option to define your experiment's name.
 Then the experiment's name is used for managing results under `logs/` directory.
 `logs/` directory will automatically be created when you run `main.py`.   
-You can choose the training mode from {normal,blur-all,blur-half-epochs,blur-step,blur-half-data} by using `--mode [TRAINING MODE]` option.
+You can choose the training mode from {normal,blur-all,mix,single-step,multi-steps} by using `--mode [TRAINING MODE]` option.
 
 - **normal**  
 This mode trains Normal AlexNet16.  
@@ -43,32 +44,32 @@ usage exmaple:
 $ python main.py --mode blur-all -e 60 -b 64 --lr 0.01 -n blur-all
 ```
 
-- **blur-half-data**    
+- **mix**    
 This mode blurs half training data.
 usage example:  
 ```bash
-$ python main.py --mode blur-half-data -s 1 -n blur-half-data_s1
+$ python main.py --mode mix -s 1 -n mix_s1
 ```
 
-- **blur-half-epochs**    
+- **single-step**    
 This mode blurs first half epochs (e.g. first 30 epochs in 60 entire epochs) in the training.
 usage example:  
 ```bash
-$ python main.py --mode blur-half-epochs -s 1 -n blur-half-epochs_s1
+$ python main.py --mode single-step -s 1 -n single-step_s1
 ```
 
-- **blur-step**  
+- **multi-steps**  
 This mode blurs images step by step (e.g. every 10 epochs).  
 usage example:  
 ```bash
-$ python main.py --mode blur-step -n blur-step_norm-in
+$ python main.py --mode multi-steps -n multi-steps
 ```
 
 - `--resume [PATH TO SAVED MODEL]`   
 This option trains your saved model starting from the latest epoch.  
 usage example:  
 ```bash
-$ python -u main.py --mode blur-half-data -a alexnet -s 1 -e 90 -b 64 --resume ../logs/models/blur-half-data_s1/model_060.pth.tar -n blur-half-data_s1_from60e 
+$ python -u main.py --mode mix -a alexnet -s 1 -e 90 -b 64 --resume ../logs/models/mix_s1/model_060.pth.tar -n mix_s1_from60e 
 ```
 
 ## citation

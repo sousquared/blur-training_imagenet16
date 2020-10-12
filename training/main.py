@@ -12,7 +12,7 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.backends.cudnn as cudnn
 import torchvision.models as models
 
-from utils import load_data, GaussianBlurAll, adjust_blur_step, adjust_blur_step_cbt, \
+from utils import load_data, GaussianBlurAll, adjust_multi_steps, adjust_multi_steps_cbt, \
                   adjust_learning_rate, AverageMeter, save_model, accuracy, print_settings
 
 
@@ -31,18 +31,18 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='alexnet',
                         ' | '.join(model_names) +
                         ' (default: alexnet)')
 parser.add_argument('--mode', type=str,
-                    choices=['normal', 'blur-all', 'blur-half-epochs',
-                             'blur-half-data', 'blur-part-of-data',
-                             'blur-step', 'blur-step-cbt'],
+                    choices=['normal', 'blur-all', 'mix',
+                             'single-step', 'reversed-single-step',
+                             'multi-steps', 'multi-steps-cbt'],
                     help='Training mode.')
 parser.add_argument('--exp-name', '-n', type=str, default='',
                     help='Experiment name.')
 parser.add_argument('--sigma', '-s', type=float, default=1,
-                    help='Sigma of Gaussian Blur.')
+                    help='Sigma of Gaussian Kernel (Gaussian Blur).')
 #parser.add_argument('--init-sigma', type=float, default=2,
-#                    help='Initial Sigma of Gaussian Blur. (blur-step-cbt)')
+#                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
 parser.add_argument('--cbt-rate', type=float, default=0.9,
-                    help='Blur decay rate (blur-step-cbt)')
+                    help='Blur decay rate (multi-steps-cbt)')
 parser.add_argument('--kernel-size', '-k', type=int, nargs=2, default=(0,0),
                     help='Kernel size of Gaussian Blur.')
 parser.add_argument('--epochs', '-e', type=int, default=60,
@@ -127,20 +127,26 @@ def main():
     print_settings(model, args)
 
     # training
+    sigma_blur = args.sigma  # save sigma of blur
     print('Start Training...')
     train_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):  # loop over the dataset multiple times
         # blur settings
         if args.mode == 'normal':
             args.sigma = 0
-        elif args.mode == 'blur-step-cbt':
+        elif args.mode == 'multi-steps-cbt':
             # args.sigma = adjust_sigma(epoch, args)  # sigma decay every 5 epoch
-            args.sigma = adjust_blur_step_cbt(args.sigma, epoch, args.cbt_rate)
-        elif args.mode == 'blur-step':
-            args.sigma = adjust_blur_step(epoch)
-        elif args.mode == 'blur-half-epochs':
+            args.sigma = adjust_multi_steps_cbt(args.sigma, epoch, args.cbt_rate)
+        elif args.mode == 'multi-steps':
+            args.sigma = adjust_multi_steps(epoch)
+        elif args.mode == 'single-step':
             if epoch >= args.epochs // 2:
+                args.sigma = 0  # no blur
+        elif args.mode == 'reversed-single-step':
+            if epoch < args.epochs // 2:
                 args.sigma = 0
+            else:
+                args.sigma = sigma_blur
 
         adjust_learning_rate(optimizer, epoch, args)  # decay by 10 every 20 epoch
                 
@@ -154,7 +160,7 @@ def main():
             
             # Blur images
             if args.sigma != 0:  # skip if sigma = 0 (no blur)
-                if args.mode == 'blur-half-data':
+                if args.mode == 'mix':
                     half1, half2 = inputs.chunk(2)
                     # blur first half images
                     half1 = GaussianBlurAll(half1, args.sigma)

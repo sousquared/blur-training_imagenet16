@@ -67,10 +67,10 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
     return torch.from_numpy(imgs_list)
 
 
-def adjust_blur_step_cbt(sigma, epoch, decay_rate=0.9, every=5):
+def adjust_multi_steps_cbt(sigma, epoch, decay_rate=0.9, every=5):
     """
     Sets the sigma of Gaussian Blur decayed every 5 epoch.
-    This is for 'blur-step-cbt' mode.
+    This is for 'multi-steps-cbt' mode.
     This idea is based on "Curriculum By Texture"
     :param sigma: blur parameter
     :param blur: flag of whether blur training images or not (default: True)
@@ -91,9 +91,9 @@ def adjust_blur_step_cbt(sigma, epoch, decay_rate=0.9, every=5):
     return sigma
     
     
-def adjust_blur_step(epoch):
+def adjust_multi_steps(epoch):
     """
-    for 'blur-step' mode
+    for 'multi-steps' mode
     :param blur: flag of whether blur training images or not (default: True)
     :param epoch: training epoch at the moment
     :return: sigma, blur
@@ -213,14 +213,22 @@ def load_model(model_path, arch='alexnet', num_classes=16):
 def print_settings(model, args):
     print('=' * 5 + ' settings ' + '=' * 5)
     print('TRAINING MODE: {}'.format(args.mode))
-    if args.mode == 'blur-step':
-        print('### BLUR CHANGING STEPS ###')
+    if args.mode == 'mix':
+        print('### MIX ###')
+        print('Sigma: {}'.format(args.sigma))
+    elif args.mode == 'single-step':
+        print('### SINGLE STEP ###')
+        print('## NO BLUR FROM EPOCH {:d}'.format(args.epochs // 2))
+        print('Sigma: {}'.format(args.sigma))
+    elif args.mode == 'reversed-single-step':
+        print('### REVERSED SINGLE STEP ###')
+        print('## NO BLUR TILL EPOCH {:d}'.format(args.epochs // 2))
+        print('Sigma: {}'.format(args.sigma))
+    elif args.mode == 'multi-steps':
+        print('### MULTI STEPS ###')
         print('Step: 1-10 -> 11-20 -> 21-30 -> 31-40 -> 41-50 -> 51-{}'.format(args.epochs))
         print('Sigma: 5 -> 4 -> 3 -> 2 -> 1 -> none')
         print('#' * 20)
-    elif args.mode == 'blur-half-epochs':
-        print('### NO BLUR FROM EPOCH {:d} ###'.format(args.epochs // 2))
-        print('Sigma: {}'.format(args.sigma))
     elif args.mode == 'blur-all':
         print('Sigma: {}'.format(args.sigma))
     if args.blur_val:
