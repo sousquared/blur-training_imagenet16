@@ -105,7 +105,16 @@ def main():
     # Model, Criterion, Optimizer
     num_classes = 16
     model = models.__dict__[args.arch]()
-    model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
+    if args.arch.startswith('alexnet') or args.arch.startswith('vgg')  \ 
+        or args.arch.startswith('mnasnet') or args.arch.startswith('mobilenet'):
+        model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
+    elif args.arch.startswith('resne') or args.arch.startswith('shufflenet') \ 
+        or args.arch.startswith('inception') or  args.arch.startswith('wide_resnet'):
+        model.fc = nn.Linear(model.fc.in_features, num_classes)   
+    elif args.arch.startswith('densenet'):
+        model.classifier = nn.Linear(model.classifier.in_features, num_classes)  
+    elif args.arch.startswith('squeezenet'):
+        model.classifier[1] = nn.Conv2d(model.classifier[1].in_channels, num_classes, kernel_size=(1, 1), stride=(1, 1))   
     model.to(device)
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
