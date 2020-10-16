@@ -105,10 +105,10 @@ def main():
     # Model, Criterion, Optimizer
     num_classes = 16
     model = models.__dict__[args.arch]()
-    if args.arch.startswith('alexnet') or args.arch.startswith('vgg')  \ 
+    if args.arch.startswith('alexnet') or args.arch.startswith('vgg')  \
         or args.arch.startswith('mnasnet') or args.arch.startswith('mobilenet'):
         model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
-    elif args.arch.startswith('resne') or args.arch.startswith('shufflenet') \ 
+    elif args.arch.startswith('resne') or args.arch.startswith('shufflenet') \
         or args.arch.startswith('inception') or  args.arch.startswith('wide_resnet'):
         model.fc = nn.Linear(model.fc.in_features, num_classes)   
     elif args.arch.startswith('densenet'):
