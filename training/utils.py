@@ -52,6 +52,30 @@ def load_data(batch_size,
     return train_loader, test_loader
 
 
+def load_model(arch, num_classes=16):
+    """
+    Load model from pytorch model zoo and change the number of final layser's units
+    Input: 
+        arch: name of architecture
+        Args:
+            num_classes: number of final layer's units
+    output: model architecture
+    """
+    model = models.__dict__[arch]()
+    if arch.startswith('alexnet') or arch.startswith('vgg')  \
+        or arch.startswith('mnasnet') or arch.startswith('mobilenet'):
+        model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
+    elif arch.startswith('resne') or arch.startswith('shufflenet') \
+        or arch.startswith('inception') or  arch.startswith('wide_resnet'):
+        model.fc = nn.Linear(model.fc.in_features, num_classes)   
+    elif arch.startswith('densenet'):
+        model.classifier = nn.Linear(model.classifier.in_features, num_classes)  
+    elif arch.startswith('squeezenet'):
+        model.classifier[1] = nn.Conv2d(model.classifier[1].in_channels, num_classes, kernel_size=(1, 1), stride=(1, 1))   
+        
+    return model
+
+
 def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
     """
     input: Torch.Tensor (num_images, 3, 32, 32)
@@ -197,18 +221,6 @@ def save_model(state, param_path, epoch):
     filename = param_path + 'epoch_{}.pth.tar'.format(epoch)
     torch.save(state, filename)
     
-    
-def load_model(model_path, arch='alexnet', num_classes=16):
-    """
-    :param model_path: path to the pytorch saved file of the model you want to use
-    """
-    model = models.__dict__[arch]()
-    model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
-    checkpoint = torch.load(model_path)
-    model.load_state_dict(checkpoint['state_dict'])
-
-    return model
-
 
 def print_settings(model, args):
     print('=' * 5 + ' settings ' + '=' * 5)

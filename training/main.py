@@ -12,8 +12,9 @@ from torch.utils.tensorboard import SummaryWriter
 import torch.backends.cudnn as cudnn
 import torchvision.models as models
 
-from utils import load_data, GaussianBlurAll, adjust_multi_steps, adjust_multi_steps_cbt, \
-                  adjust_learning_rate, AverageMeter, save_model, accuracy, print_settings
+from utils import load_data, load_model, save_model, GaussianBlurAll, \
+                    adjust_multi_steps, adjust_multi_steps_cbt, adjust_learning_rate, \
+                    AverageMeter, accuracy, print_settings
 
 
 model_names = sorted(name for name in models.__dict__
@@ -103,18 +104,7 @@ def main():
     trainloader, testloader = load_data(batch_size=args.batch_size)
 
     # Model, Criterion, Optimizer
-    num_classes = 16
-    model = models.__dict__[args.arch]()
-    if args.arch.startswith('alexnet') or args.arch.startswith('vgg')  \
-        or args.arch.startswith('mnasnet') or args.arch.startswith('mobilenet'):
-        model.classifier[-1] = nn.Linear(model.classifier[-1].in_features, num_classes)
-    elif args.arch.startswith('resne') or args.arch.startswith('shufflenet') \
-        or args.arch.startswith('inception') or  args.arch.startswith('wide_resnet'):
-        model.fc = nn.Linear(model.fc.in_features, num_classes)   
-    elif args.arch.startswith('densenet'):
-        model.classifier = nn.Linear(model.classifier.in_features, num_classes)  
-    elif args.arch.startswith('squeezenet'):
-        model.classifier[1] = nn.Conv2d(model.classifier[1].in_channels, num_classes, kernel_size=(1, 1), stride=(1, 1))   
+    model = load_model(args.arch)  # remember the number of final outputs is 16. 
     model.to(device)
     criterion = nn.CrossEntropyLoss().to(device)
     optimizer = optim.SGD(model.parameters(), lr=args.lr, momentum=0.9, weight_decay=args.weight_decay)
