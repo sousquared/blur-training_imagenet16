@@ -37,11 +37,11 @@ usage example:
 $ python main.py --mode normal -e 60 -b 64 --lr 0.01 -n normal
 ```
 
-- **blur-all**  
+- **all**  
 This mode blurs ALL images in the training mode.  
 usage exmaple:  
 ```bash
-$ python main.py --mode blur-all -e 60 -b 64 --lr 0.01 -n blur-all
+$ python main.py --mode all -s1 -n all_s1
 ```
 
 - **mix**    

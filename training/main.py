@@ -31,7 +31,7 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='alexnet',
                         ' | '.join(model_names) +
                         ' (default: alexnet)')
 parser.add_argument('--mode', type=str,
-                    choices=['normal', 'blur-all', 'mix',
+                    choices=['normal', 'all', 'mix',
                              'single-step', 'reversed-single-step',
                              'multi-steps', 'multi-steps-cbt'],
                     help='Training mode.')
