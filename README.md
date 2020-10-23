@@ -13,7 +13,7 @@ If not, Download the ImageNet dataset from http://www.image-net.org/
     Then set the path.
     
 ## CNNs Architecture
-**AlexNet16**  
+**AlexNet (16 class)**  
 Since the number of class is 16, I change the number of final units of AlexNet from 1000 to 16.
 See more in `notebook/models.ipynb`  
 You can also use another architecture by using `--arch [ARCHITECTURE NAME]`. See `python main.py -h` for the available models (from pytorchvision's model zoo).
@@ -31,7 +31,7 @@ Then the experiment's name is used for managing results under `logs/` directory.
 You can choose the training mode from {normal,blur-all,mix,single-step,multi-steps} by using `--mode [TRAINING MODE]` option.
 
 - **normal**  
-This mode trains Normal AlexNet16.  
+This mode trains Normal AlexNet.  
 usage example:  
 ```bash
 $ python main.py --mode normal -e 60 -b 64 --lr 0.01 -n normal
