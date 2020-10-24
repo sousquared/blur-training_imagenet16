@@ -6,7 +6,11 @@ Blur-training with 16-class-ImageNet
 ```bash
 $ pip install -r requirements.txt
 ```
-Or pull and run [docker image][docker-blur-training] (e.g. blur-training:latest) which I made for these experiments.  
+Or pull and run [docker image][docker-blur-training] (e.g. blur-training:latest) which I made for these experiments.
+You may need to install **robustness** library in the container like:
+```bash
+$ pip install robustness==1.1
+``` 
 - Get ImageNet images & set path. If you already have ImageNet, set the `in_path` variable in `training/utils.py`.  
 If not, Download the ImageNet dataset from http://www.image-net.org/  
     (Note that the ImageNet images need to be divided in two subdirectories, ``train/`` and ``val/``.)  
