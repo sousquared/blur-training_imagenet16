@@ -8,7 +8,7 @@ Training images are blurred by Gaussian function. The images are more blurred as
 
 
 ## Schedule
-With the script, you can try different time schedule for blurring images. Here is an overview of the training schedule:
+You can try different training schedule as for blurring images. Here is an overview of the training schedule:
 ![schedule](./figures/schedule.png)
 
 
@@ -48,7 +48,7 @@ Then the experiment's name is used for managing results under `logs/` directory.
 You can choose the training mode from {normal,blur-all,mix,single-step,multi-steps} by using `--mode [TRAINING MODE]` option.
 
 - **normal**  
-This mode trains Normal AlexNet.  
+This mode trains Normal model (default: AlexNet).  
 usage example:  
 ```bash
 $ python main.py --mode normal -e 60 -b 64 --lr 0.01 -n normal
@@ -56,7 +56,7 @@ $ python main.py --mode normal -e 60 -b 64 --lr 0.01 -n normal
 
 - **all**  
 This mode blurs ALL images in the training mode.  
-usage exmaple:  
+usage example:  
 ```bash
 $ python main.py --mode all -s1 -n all_s1
 ```
@@ -90,7 +90,7 @@ $ python -u main.py --mode mix -a alexnet -s 1 -e 90 -b 64 --resume ../logs/mode
 ```
 
 ## citation
-Training scripts and functions are strongly rely on [pytorch tutorial][pytorch-tutorial] and [pytorch imagenet trainning example][pytorch-imagenet].
+Training scripts and functions strongly rely on [pytorch tutorial][pytorch-tutorial] and [pytorch imagenet trainning example][pytorch-imagenet].
 
 
 
