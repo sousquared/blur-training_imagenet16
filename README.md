@@ -1,6 +1,24 @@
 # blur-training_imagenet16
 Blur-training with 16-class-ImageNet
 
+
+## Blur images
+Training images are blurred by Gaussian function. The images are more blurred as std.(σ) of Gaussian kernel is bigger.
+![blurred-images](./figures/blurred_images.png)
+
+
+## Schedule
+With the script, you can try different time schedule for blurring images. Here is an overview of the training schedule:
+![schedule](./figures/schedule.png)
+
+
+## CNNs Architecture
+**Default: AlexNet (16 class)**  
+Since the number of class is 16, I change the number of final units from 1000 to 16.
+See more in `notebook/models.ipynb`  
+You can also use another architecture by using `--arch [ARCHITECTURE NAME]`. See `python main.py -h` for the available models (from pytorchvision's model zoo).
+
+
 ## Preparation
 - Install Python Packages  
 ```bash
@@ -16,17 +34,12 @@ If not, Download the ImageNet dataset from http://www.image-net.org/
     (Note that the ImageNet images need to be divided in two subdirectories, ``train/`` and ``val/``.)  
     Then set the path.
     
-## CNNs Architecture
-**AlexNet (16 class)**  
-Since the number of class is 16, I change the number of final units of AlexNet from 1000 to 16.
-See more in `notebook/models.ipynb`  
-You can also use another architecture by using `--arch [ARCHITECTURE NAME]`. See `python main.py -h` for the available models (from pytorchvision's model zoo).
-
+    
 ## run examples
 General usage example:
 ```bash
 $ cd training
-$ python main.py --mode [TRAINING MODE] -n [EXPERIMENT NAME] [IMAGENET_PATH]
+$ python main.py --arch alexnet --mode [TRAINING MODE] -n [EXPERIMENT NAME] [IMAGENET_PATH]
 ```  
 
 For `main.py`, you need to use `--exp-name` or `-n` option to define your experiment's name.
