@@ -45,7 +45,9 @@ $ python main.py --arch [ARCHITECTURE NAME] --mode [TRAINING MODE] -n [EXPERIMEN
 For `main.py`, you need to use `--exp-name` or `-n` option to define your experiment's name.
 Then the experiment's name is used for managing results under `logs/` directory.
 `logs/` directory will automatically be created when you run `main.py`.   
-You can choose the training mode from {normal,blur-all,mix,single-step,multi-steps} by using `--mode [TRAINING MODE]` option.
+You can choose the training mode from:   
+`normal, all, mix, reversed-single-step, single-step, multi-steps`  
+by using `--mode [TRAINING MODE]` option.
 
 - **normal**  
 This mode trains Normal model (default: AlexNet).  
