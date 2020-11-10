@@ -119,23 +119,7 @@ def adjust_multi_steps(epoch):
     """
     for 'multi-steps' mode
     :param blur: flag of whether blur training images or not (default: True)
-    :param epoch: training epoch at the moment
-    :return: sigma, blur
-    """
-    """
-    if epoch < 10:
-        sigma = 5
-    elif epoch < 20:
-        sigma = 4
-    elif epoch < 30:
-        sigma = 3
-    elif epoch < 40:
-        sigma = 2
-    elif epoch < 50:
-        sigma = 1
-    else:
-        sigma = 0  # no blur
-    
+    :return: sigma
     """
     if epoch < 10:
         sigma = 4
