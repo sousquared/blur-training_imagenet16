@@ -39,7 +39,7 @@ If not, Download the ImageNet dataset from http://www.image-net.org/
 General usage example:
 ```bash
 $ cd training
-$ python main.py --arch [ARCHITECTURE NAME] --mode [TRAINING MODE] -n [EXPERIMENT NAME] [IMAGENET_PATH]
+$ python main.py --arch [ARCHITECTURE NAME] --mode [TRAINING MODE] -n [EXPERIMENT NAME] 
 ```  
 
 For `main.py`, you need to use `--exp-name` or `-n` option to define your experiment's name.
