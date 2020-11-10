@@ -40,8 +40,8 @@ parser.add_argument('--exp-name', '-n', type=str, default='',
                     help='Experiment name.')
 parser.add_argument('--sigma', '-s', type=float, default=1,
                     help='Sigma of Gaussian Kernel (Gaussian Blur).')
-#parser.add_argument('--init-sigma', type=float, default=2,
-#                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
+parser.add_argument('--init-sigma', type=float, default=2,
+                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
 parser.add_argument('--cbt-rate', type=float, default=0.9,
                     help='Blur decay rate (multi-steps-cbt)')
 parser.add_argument('--kernel-size', '-k', type=int, nargs=2, default=(0,0),
@@ -134,8 +134,7 @@ def main():
         if args.mode == 'normal':
             args.sigma = 0
         elif args.mode == 'multi-steps-cbt':
-            # args.sigma = adjust_sigma(epoch, args)  # sigma decay every 5 epoch
-            args.sigma = adjust_multi_steps_cbt(args.sigma, epoch, args.cbt_rate)
+            args.sigma = adjust_multi_steps_cbt(args.init_sigma, epoch, args.cbt_rate, every=5)
         elif args.mode == 'multi-steps':
             args.sigma = adjust_multi_steps(epoch)
         elif args.mode == 'single-step':

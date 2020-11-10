@@ -91,30 +91,6 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
     return torch.from_numpy(imgs_list)
 
 
-def adjust_multi_steps_cbt(sigma, epoch, decay_rate=0.9, every=5):
-    """
-    Sets the sigma of Gaussian Blur decayed every 5 epoch.
-    This is for 'multi-steps-cbt' mode.
-    This idea is based on "Curriculum By Texture"
-    :param sigma: blur parameter
-    :param blur: flag of whether blur training images or not (default: True)
-    :param epoch: training epoch at the moment
-    :param decay_rate: how much the model decreases the sigma value
-    :param every: the number of epochs the model decrease sigma value
-    :return: sigma, blur
-    """
-    if epoch < every:
-        pass
-    elif epoch % every == 0:
-        sigma = sigma * decay_rate
-        
-    #if epoch >= 40:
-    #    blur = False
-    
-    # return args.init_sigma * (args.cbt_rate ** (epoch // every))
-    return sigma
-    
-    
 def adjust_multi_steps(epoch):
     """
     for 'multi-steps' mode
@@ -133,6 +109,21 @@ def adjust_multi_steps(epoch):
         sigma = 0  # no blur
     
     return sigma
+
+
+def adjust_multi_steps_cbt(init_sigma, epoch, decay_rate=0.9, every=5):
+    """
+    Sets the sigma of Gaussian Blur decayed every 5 epoch.
+    This is for 'multi-steps-cbt' mode.
+    This idea is based on "Curriculum By Texture"
+    Args: 
+        init_sigma: initial sigma of Gaussian kernel 
+        epoch: training epoch at the moment
+        decay_rate: how much the model decreases the sigma value
+        every: the number of epochs the model decrease sigma value
+    Return: sigma of Gaussian kernel (GaussianBlur)
+    """
+    return init_sigma * (decay_rate ** (epoch // every))
 
 
 def adjust_learning_rate(optimizer, epoch, args):
