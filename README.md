@@ -2,7 +2,7 @@
 Blur-training with 16-class-ImageNet
 
 
-## Blur images
+## Blur images (GaussianBlur)
 Training images are blurred by Gaussian function. The images are more blurred as std.(σ) of Gaussian kernel is bigger.
 ![blurred-images](./figures/blurred_images.png)
 
@@ -89,11 +89,14 @@ usage example:
 $ python -u main.py --mode mix -a alexnet -s 1 -e 90 -b 64 --resume ../logs/models/mix_s1/model_060.pth.tar -n mix_s1_from60e 
 ```
 
+
+## notebook
+Demonstrations of 16-class-ImageNet, GaussianBlur, and CNN model architectures.
+
+
 ## citation
 Training scripts and functions strongly rely on [pytorch tutorial][pytorch-tutorial] and [pytorch imagenet trainning example][pytorch-imagenet].
 
 
-
-[pytorch-tutorial]:https://github.com/pytorch/tutorials/blob/master/beginner_source/blitz/cifar10_tutorial.py
 [pytorch-imagenet]:https://github.com/pytorch/examples/blob/master/imagenet
 [docker-blur-training]:https://hub.docker.com/r/sousquared/blur-training
