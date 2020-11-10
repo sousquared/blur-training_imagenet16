@@ -2,7 +2,7 @@
 Blur-training with 16-class-ImageNet
 
 
-## Blur images (GaussianBlur)
+## Blurred images (GaussianBlur)
 Training images are blurred by Gaussian function. The images are more blurred as std.(σ) of Gaussian kernel is bigger.
 ![blurred-images](./figures/blurred_images.png)
 
