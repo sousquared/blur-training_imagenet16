@@ -241,7 +241,7 @@ def print_settings(model, args):
         print('Step: 1-10 -> 11-20 -> 21-30 -> 31-40 -> 41-50 -> 51-{}'.format(args.epochs))
         print('Sigma: 5 -> 4 -> 3 -> 2 -> 1 -> none')
         print('#' * 20)
-    elif args.mode == 'blur-all':
+    elif args.mode == 'all':
         print('Sigma: {}'.format(args.sigma))
     if args.blur_val:
         print('VALIDATION MODE: blur-val')
