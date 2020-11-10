@@ -40,9 +40,7 @@ def load_data(batch_size,
     custom_dataset.transform_train.transforms.append(normalize)
     custom_dataset.transform_test.transforms.append(normalize)
     
-    train_loader, test_loader = custom_dataset.make_loaders(workers=10,
-                                                            batch_size=batch_size)
-
+    train_loader, test_loader = custom_dataset.make_loaders(workers=10, batch_size=batch_size)
     return train_loader, test_loader
 
 
