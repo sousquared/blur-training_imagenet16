@@ -14,13 +14,12 @@ from robustness.tools.imagenet_helpers import common_superclass_wnid, ImageNetHi
 def load_data(batch_size, 
              in_path = '/mnt/data/ImageNet/ILSVRC2012/',
              in_info_path = '../info/'):
-    """
-    load 16-class-ImageNet
-    :param batch_size: the batch size used in training and test
-    :param in_path: the path to ImageNet
-    :param in_info_path: the path to the directory 
-                              that contains imagenet_class_index.json, wordnet.is_a.txt, words.txt
-    :return: train_loader, test_loader
+    """Load 16-class-ImageNet
+    Args: 
+        batch_size: the batch size used in training and test
+        in_path: the path to ImageNet
+        in_info_path: the path to the directory that contains imagenet_class_index.json, wordnet.is_a.txt, words.txt
+    Returns: train_loader, test_loader
     """
 
     in_hier = ImageNetHierarchy(in_path, in_info_path)
@@ -31,17 +30,12 @@ def load_data(batch_size,
     # data augumentation for imagenet in robustness library is:
     # https://github.com/MadryLab/robustness/blob/master/robustness/data_augmentation.py
     
-    ### parameters for normalization: choose one of them if you want to use normalization #############
-    #normalize = transforms.Normalize(mean=[0.4717, 0.4499, 0.3837], std=[0.2600, 0.2516, 0.2575])  # norm
+    # standard ImageNet Normalization
+    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  
+    
     # https://github.com/MadryLab/robustness/blob/master/robustness/datasets.py
+    #normalize = transforms.Normalize(mean=[0.4717, 0.4499, 0.3837], std=[0.2600, 0.2516, 0.2575])  
     
-    # If you want to use normalization parameters of ImageNet from pyrotch:
-    normalize = transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])  # norm-in
-    
-    # 16-class-imagenet
-    #normalize = transforms.Normalize(mean=[0.4677, 0.4377, 0.3986], std=[0.2769, 0.2724, 0.2821])  # norm16
-    #normalize = transforms.Normalize(mean=[0.4759, 0.4459, 0.4066], std=[0.2768, 0.2723, 0.2827])  # norm16-2
-    ############################################################################
     # add normalization 
     custom_dataset.transform_train.transforms.append(normalize)
     custom_dataset.transform_test.transforms.append(normalize)
@@ -92,10 +86,10 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
 
 
 def adjust_multi_steps(epoch):
-    """
-    for 'multi-steps' mode
-    :param blur: flag of whether blur training images or not (default: True)
-    :return: sigma
+    """For 'multi-steps' mode. Return sigma based on current epoch of training.
+    Arg:
+        epoch: current epoch of training
+    Return: sigma
     """
     if epoch < 10:
         sigma = 4
