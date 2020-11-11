@@ -97,7 +97,7 @@ Demonstrations of 16-class-ImageNet, GaussianBlur, and CNN model architectures.
 
 
 ## citation
-Training scripts and functions strongly rely on [pytorch tutorial][pytorch-tutorial] and [pytorch imagenet trainning example][pytorch-imagenet].
+Training scripts and functions are based rely on [pytorch tutorial][pytorch-tutorial] and [pytorch imagenet trainning example][pytorch-imagenet].
 
 
 [pytorch-imagenet]:https://github.com/pytorch/examples/blob/master/imagenet
