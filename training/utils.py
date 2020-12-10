@@ -73,14 +73,16 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
     input: Torch.Tensor (num_images, 3, 32, 32)
     output: Torch.Tensor (num_images, 3, 32, 32)
     """
-    imgs = imgs.numpy()
-    imgs_list = []
-    for img in imgs:
-         imgs_list.append(cv2.GaussianBlur(img.transpose(1, 2, 0), kernel_size, sigma))
-    imgs_list = np.array(imgs_list)
-    imgs_list = imgs_list.transpose(0, 3, 1, 2)
-    
-    return torch.from_numpy(imgs_list)
+    if sigma == 0:
+        return imgs  # do nothing
+    else:
+        imgs = imgs.numpy()
+        imgs_list = []
+        for img in imgs:
+             imgs_list.append(cv2.GaussianBlur(img.transpose(1, 2, 0), kernel_size, sigma))
+        imgs_list = np.array(imgs_list)
+        imgs_list = imgs_list.transpose(0, 3, 1, 2)
+        return torch.from_numpy(imgs_list)
 
 
 def adjust_multi_steps(epoch):
