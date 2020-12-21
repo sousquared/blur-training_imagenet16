@@ -68,10 +68,15 @@ def load_model(arch, num_classes=16):
     return model
 
 
-def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
+def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)) -> torch.Tensor:
     """
-    input: Torch.Tensor (num_images, 3, 32, 32)
-    output: Torch.Tensor (num_images, 3, 32, 32)
+    Args:
+        imgs: Images (torch.Tensor)
+            size: (N, 3, 224, 224)
+        sigma: Standard deviation of Gaussian kernel.
+        kernel_size: This size will be automatically adjusted.
+    Returns: Blurred images (torch.Tensor)
+            size: (N, 3, 224, 224)
     """
     if sigma == 0:
         return imgs  # do nothing
@@ -79,7 +84,8 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0,0)):
         imgs = imgs.numpy()
         imgs_list = []
         for img in imgs:
-             imgs_list.append(cv2.GaussianBlur(img.transpose(1, 2, 0), kernel_size, sigma))
+             imgs_list.append(cv2.GaussianBlur(
+                 img.transpose(1, 2, 0), kernel_size, sigma))
         imgs_list = np.array(imgs_list)
         imgs_list = imgs_list.transpose(0, 3, 1, 2)
         return torch.from_numpy(imgs_list)
