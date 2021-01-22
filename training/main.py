@@ -33,15 +33,15 @@ parser.add_argument('-a', '--arch', metavar='ARCH', default='alexnet',
                         ' (default: alexnet)')
 parser.add_argument('--mode', type=str,
                     choices=['normal', 'all', 'mix',
-                             'single-step', 'reversed-single-step',
+                             'single-step', 'reversed-single-step', 'fixed-single-step',
                              'multi-steps', 'multi-steps-cbt'],
                     help='Training mode.')
 parser.add_argument('--exp-name', '-n', type=str, default='',
                     help='Experiment name.')
 parser.add_argument('--sigma', '-s', type=float, default=1,
                     help='Sigma of Gaussian Kernel (Gaussian Blur).')
-parser.add_argument('--init-sigma', type=float, default=2,
-                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
+#parser.add_argument('--init-sigma', type=float, default=2,
+#                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
 parser.add_argument('--cbt-rate', type=float, default=0.9,
                     help='Blur decay rate (multi-steps-cbt)')
 parser.add_argument('--kernel-size', '-k', type=int, nargs=2, default=(0,0),
@@ -75,13 +75,13 @@ def main():
     MODEL_PATH = '../logs/models/{}/'.format(args.exp_name)
 
 
-    if os.path.exists(OUTPUT_PATH):
+    if not args.resume and os.path.exists(OUTPUT_PATH):
         print('ERROR: This \'--exp-name\' is already used. \
                 Use another name for this experiment.')
         sys.exit()
 
     # recording outputs
-    sys.stdout = open(OUTPUT_PATH, 'w')
+    sys.stdout = open(OUTPUT_PATH, 'a')
     sys.stderr = open(OUTPUT_PATH, 'a')
 
     # tensorboardX
@@ -101,8 +101,8 @@ def main():
         torch.cuda.manual_seed(args.seed)
 
     # data settings
-    trainloader, testloader = load_data(batch_size=args.batch_size)
-
+    trainloader, testloader = load_data(batch_size=args.batch_size)  
+    
     # Model, Criterion, Optimizer
     model = load_model(args.arch)  # remember the number of final outputs is 16. 
     model.to(device)
@@ -126,7 +126,7 @@ def main():
     print_settings(model, args)
 
     # training
-    sigma_blur = args.sigma  # save sigma of blur
+    sigma_blur = args.sigma  # save sigma of blur (for reversed-single-step)
     print('Start Training...')
     train_time = time.time()
     for epoch in range(args.start_epoch, args.epochs):  # loop over the dataset multiple times
@@ -134,12 +134,19 @@ def main():
         if args.mode == 'normal':
             args.sigma = 0
         elif args.mode == 'multi-steps-cbt':
-            args.sigma = adjust_multi_steps_cbt(args.init_sigma, epoch, args.cbt_rate, every=5)
+            # args.sigma = adjust_sigma(epoch, args)  # sigma decay every 5 epoch
+            args.sigma = adjust_multi_steps_cbt(args.sigma, epoch, args.cbt_rate)
         elif args.mode == 'multi-steps':
             args.sigma = adjust_multi_steps(epoch)
         elif args.mode == 'single-step':
             if epoch >= args.epochs // 2:
                 args.sigma = 0  # no blur
+        elif args.mode == 'fixed-single-step':
+            if epoch >= args.epochs // 2:
+                args.sigma = 0  # no blur
+                # fix parameters of 1st Conv layer
+                model.features[0].weight.requires_grad = False
+                model.features[0].bias.requires_grad = False
         elif args.mode == 'reversed-single-step':
             if epoch < args.epochs // 2:
                 args.sigma = 0
@@ -157,14 +164,13 @@ def main():
             inputs, labels = data[0], data[1].to(device)
             
             # Blur images
-            if args.sigma != 0:  # skip if sigma = 0 (no blur)
-                if args.mode == 'mix':
-                    half1, half2 = inputs.chunk(2)
-                    # blur first half images
-                    half1 = GaussianBlurAll(half1, args.sigma)
-                    inputs = torch.cat((half1, half2))
-                else:
-                    inputs = GaussianBlurAll(inputs, args.sigma)  
+            if args.mode == 'mix':
+                half1, half2 = inputs.chunk(2)
+                # blur first half images
+                half1 = GaussianBlurAll(half1, args.sigma)
+                inputs = torch.cat((half1, half2))
+            else:
+                inputs = GaussianBlurAll(inputs, args.sigma)  
             inputs = inputs.to(device)
 
             # zero the parameter gradients
