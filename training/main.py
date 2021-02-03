@@ -18,6 +18,7 @@ from utils import (
     load_model,
     save_model,
     GaussianBlurAll,
+    RandomGaussianBlurAll,
     adjust_multi_steps,
     adjust_multi_steps_cbt,
     adjust_learning_rate,
@@ -54,6 +55,7 @@ parser.add_argument(
         "normal",
         "all",
         "mix",
+        "random-mix",
         "single-step",
         "reversed-single-step",
         "fixed-single-step",
@@ -69,6 +71,18 @@ parser.add_argument(
     type=float,
     default=1,
     help="Sigma of Gaussian Kernel (Gaussian Blur).",
+)
+parser.add_argument(
+    "--min_sigma",
+    type=float,
+    default=0,
+    help="Minimum sigma of Gaussian Kernel (Gaussian Blur) for random-mix training.",
+)
+parser.add_argument(
+    "--max_sigma",
+    type=float,
+    default=10,
+    help="Maximum sigma of Gaussian Kernel (Gaussian Blur) for random-mix training.",
 )
 # parser.add_argument('--init-sigma', type=float, default=2,
 #                    help='Initial Sigma of Gaussian Blur. (multi-steps-cbt)')
@@ -231,6 +245,11 @@ def main():
                 half1, half2 = inputs.chunk(2)
                 # blur first half images
                 half1 = GaussianBlurAll(half1, args.sigma)
+                inputs = torch.cat((half1, half2))
+            if args.mode == "random-mix":
+                half1, half2 = inputs.chunk(2)
+                # blur first half images
+                half1 = RandomGaussianBlurAll(half1, args.min_sigma, args.max_sigma)
                 inputs = torch.cat((half1, half2))
             else:
                 inputs = GaussianBlurAll(inputs, args.sigma)
