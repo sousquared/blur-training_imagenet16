@@ -1,12 +1,11 @@
 import random
+
 import cv2
 import numpy as np
-
 import torch
 import torch.nn as nn
 import torchvision.models as models
 import torchvision.transforms as transforms
-
 from robustness import datasets
 from robustness.tools.imagenet_helpers import common_superclass_wnid, ImageNetHierarchy
 
@@ -108,7 +107,9 @@ def GaussianBlurAll(imgs, sigma, kernel_size=(0, 0)) -> torch.Tensor:
         return torch.from_numpy(imgs_list)
 
 
-def RandomGaussianBlurAll(imgs, min_sigma, max_sigma, kernel_size=(0, 0)) -> torch.Tensor:
+def RandomGaussianBlurAll(
+    imgs, min_sigma, max_sigma, kernel_size=(0, 0)
+) -> torch.Tensor:
     """Return Blurred images by random sigma.
     Each image is blurred by a sigma chosen by randomly from [min_sigma, max_sigma].
 
@@ -126,9 +127,7 @@ def RandomGaussianBlurAll(imgs, min_sigma, max_sigma, kernel_size=(0, 0)) -> tor
         # Choose a random sigma for each image
         sigma = random.uniform(min_sigma, max_sigma)
 
-        imgs_list.append(
-            cv2.GaussianBlur(img.transpose(1, 2, 0), kernel_size, sigma)
-        )
+        imgs_list.append(cv2.GaussianBlur(img.transpose(1, 2, 0), kernel_size, sigma))
 
     imgs_list = np.array(imgs_list)
     imgs_list = imgs_list.transpose(0, 3, 1, 2)
