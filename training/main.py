@@ -81,7 +81,7 @@ parser.add_argument(
 parser.add_argument(
     "--max_sigma",
     type=float,
-    default=10,
+    default=5,
     help="Maximum sigma of Gaussian Kernel (Gaussian Blur) for random-mix training.",
 )
 # parser.add_argument('--init-sigma', type=float, default=2,
