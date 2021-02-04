@@ -246,7 +246,7 @@ def main():
                 # blur first half images
                 half1 = GaussianBlurAll(half1, args.sigma)
                 inputs = torch.cat((half1, half2))
-            if args.mode == "random-mix":
+            elif args.mode == "random-mix":
                 half1, half2 = inputs.chunk(2)
                 # blur first half images
                 half1 = RandomGaussianBlurAll(half1, args.min_sigma, args.max_sigma)
