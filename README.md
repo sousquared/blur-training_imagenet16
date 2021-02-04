@@ -42,7 +42,7 @@ $ cd training
 $ python main.py --arch [ARCHITECTURE NAME] --mode [TRAINING MODE] -n [EXPERIMENT NAME] 
 ```  
 
-For `main.py`, you need to use `--exp-name` or `-n` option to define your experiment's name.
+For `main.py`, you need to use `--exp_name` or `-n` option to define your experiment's name.
 Then the experiment's name is used for managing results under `logs/` directory.
 `logs/` directory will automatically be created when you run `main.py`.   
 You can choose the training mode from:   
