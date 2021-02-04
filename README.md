@@ -70,6 +70,13 @@ usage example:
 $ python main.py --mode mix -s 1 -n mix_s1
 ```
 
+- **random-mix**
+This mode blurs half training data **randomly**.
+usage example:  
+```bash
+$ python main.py --arch alexnet --mode random-mix --min_sigma 0 --max_sigma 5 -n alexnet_random-mix_s0-5
+```
+
 - **single-step**    
 This mode blurs first half epochs (e.g. first 30 epochs in 60 entire epochs) in the training.
 usage example:  
