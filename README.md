@@ -70,9 +70,9 @@ usage example:
 $ python main.py --mode mix -s 1 -n mix_s1
 ```
 
-- **random-mix**
-This mode blurs half training data **randomly**.
-usage example:  
+- **random-mix** <br>
+This mode blurs half training data **randomly**. <br>
+usage example:
 ```bash
 $ python main.py --arch alexnet --mode random-mix --min_sigma 0 --max_sigma 5 -n alexnet_random-mix_s0-5
 ```
