@@ -95,7 +95,7 @@ $ python main.py --mode multi-steps -n multi-steps
 This option trains your saved model starting from the latest epoch.  
 usage example:  
 ```bash
-$ python main.py --mode mix -a alexnet -s 1 -e 90 -b 64 --resume ../logs/models/mix_s1/model_060.pth.tar -n mix_s1_from60e 
+$ python main.py --arch alexnet --mode mix -s 1 -n alexnet_mix_s1 --resume ../logs/models/alexnet_mix_s1/checkpoint.pth.tar 
 ```
 
 
